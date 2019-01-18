@@ -29,7 +29,8 @@ func CreateSession(k string, t *Table) (*Session, error) {
 	s := Session{}
 	s.Key = k
 	if t != nil {
-		s.Value, err := FromTableToString(t)
+		v, err := FromTableToString(t)
+		s.Value = v 
 	}
 	addrs := make([]string, 2, 2)
 	addrs[0] = fmt.Sprintf("%v:%v", Rip, Rport0)
@@ -68,7 +69,8 @@ func (this *Session) GetFromCassandra() error {
 }
 
 func (this *Session) Get() (*Table, error) {
-	this.Value, err := this.Client.Get(this.Key).Result()
+	v, err := this.Client.Get(this.Key).Result()
+	this.Value = v
 	if err == nil {
 		// 2.1 if succ, ret
 		fmt.Printf("%v,%v\n", this.Key, this.Value)
@@ -104,7 +106,7 @@ func (this *Session) Get() (*Table, error) {
 	return t, err
 }
 
-func (this *seesion) Put() error {
+func (this *Seesion) Put() error {
 	defer this.Client.Close()
 	err := this.Client.Set(this.Key, this.Value, 0).Err()
 	if err != nil {

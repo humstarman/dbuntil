@@ -1,6 +1,8 @@
 package dbutil
 
 import (
+	"fmt"
+
 	"github.com/pkg/errors"
 	"strings"
 )
@@ -33,7 +35,7 @@ func FromTableToString(t *Table) (string, error) {
 	return v, nil
 }
 
-func FromStringToTable(str) (*Table, error) {
+func FromStringToTable(str string) (*Table, error) {
 	if str == "" {
 		err := errors.New("empty strings")
 		return nil, err
@@ -42,5 +44,5 @@ func FromStringToTable(str) (*Table, error) {
 	v := strings.Split(str, Sep)
 	t.V0 = AssignValue(v, 0)
 	t.V1 = AssignValue(v, 1)
-	return &t, nill
+	return &t, nil
 }
