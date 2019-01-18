@@ -106,7 +106,7 @@ func (this *Session) Get() (*Table, error) {
 	return t, err
 }
 
-func (this *Seesion) Put() error {
+func (this *Session) Put() error {
 	defer this.Client.Close()
 	err := this.Client.Set(this.Key, this.Value, 0).Err()
 	if err != nil {
