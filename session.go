@@ -30,6 +30,9 @@ func CreateSession(k string, t *Table) (*Session, error) {
 	s.Key = k
 	if t != nil {
 		v, err := FromTableToString(t)
+		if err != nil {
+			log.Fatal(err)
+		}
 		s.Value = v 
 	}
 	addrs := make([]string, 2, 2)
