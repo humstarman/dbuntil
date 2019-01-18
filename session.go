@@ -17,12 +17,11 @@ const (
 	Cport    = 9042
 	List     = "newbie"
 	Rip      = "127.0.0.1"
-	Cip      = os.Getenv("POD_IP")
 )
 
 type Session struct {
 	Key    string
-	Value  String
+	Value  string
 	Client *redis.ClusterClient
 }
 
@@ -49,7 +48,8 @@ func CreateSession(k string, t *Table) (*Session, err) {
 }
 
 func (this *Session) GetFromCassandra() error {
-	cluster := gocql.NewCluster(fmt.Sprintf("%v", Cip))
+	ip := os.Getenv("POD_IP")
+	cluster := gocql.NewCluster(fmt.Sprintf("%v", ip))
 	cluster.Keyspace = Keyspace
 	cluster.Port = Cport
 	log.Printf("Cassndra using: %v.%v\n", Keyspace, Column)
