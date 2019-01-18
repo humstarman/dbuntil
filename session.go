@@ -25,11 +25,11 @@ type Session struct {
 	Client *redis.ClusterClient
 }
 
-func CreateSession(k string, t *Table) (*Session, err) {
+func CreateSession(k string, t *Table) (*Session, error) {
 	s := Session{}
 	s.Key = k
 	if t != nil {
-		s.Value, err = FromTableToString(t)
+		s.Value, err := FromTableToString(t)
 	}
 	addrs := make([]string, 2, 2)
 	addrs[0] = fmt.Sprintf("%v:%v", Rip, Rport0)
@@ -68,10 +68,10 @@ func (this *Session) GetFromCassandra() error {
 }
 
 func (this *Session) Get() (*Table, error) {
-	this.Value, err = this.Client.Get(this.Key).Result()
+	this.Value, err := this.Client.Get(this.Key).Result()
 	if err == nil {
 		// 2.1 if succ, ret
-		fmt.Printf("%v,%v\n", *k, v)
+		fmt.Printf("%v,%v\n", this.Key, this.Value)
 		t, err := FromStringToTable(this.Value)
 		if err != nil {
 			log.Println(err)
