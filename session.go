@@ -81,19 +81,19 @@ func (this *Session) Get() (string, error) {
 	if err.Error() != "redis: nil" {
 		// 2.2 if failed with other reasons, ret
 		log.Println(err)
-		return nil, err
+		return "", err
 	}
 	// 2.3 if not exists, get from Cassandra
 	log.Println("not in Redis, try Cassandra")
 	err = this.GetFromCassandra()
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return "", err
 	}
 	err = this.Put()
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return "", err
 	}
 	return this.Value, err
 }
