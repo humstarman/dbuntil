@@ -29,13 +29,23 @@ func AssignValue(v []string, idx int) string {
 }
 
 func FromTableToString(t *Table) (string, error) {
+	/*
 	v := ""
 	v = PlusNonNull(v, t.V0)
 	v = PlusNonNull(v, t.V1)
+	*/
+	v := ""
+
+	v += t.V0
+
+	v += Sep
+	v += t.V1
+
 	return v, nil
 }
 
 func FromStringToTable(str string) (*Table, error) {
+	/*
 	if str == "" {
 		err := errors.New("empty strings")
 		return nil, err
@@ -44,5 +54,10 @@ func FromStringToTable(str string) (*Table, error) {
 	v := strings.Split(str, Sep)
 	t.V0 = AssignValue(v, 0)
 	t.V1 = AssignValue(v, 1)
+	*/
+	t := Table{}
+	v := strings.Split(str, Sep)
+	t.V0 = v[0]
+	t.V1 = v[1]
 	return &t, nil
 }
