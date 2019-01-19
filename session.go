@@ -25,15 +25,13 @@ type Session struct {
 	Client *redis.ClusterClient
 }
 
-func CreateSession(k string, t *Table) (*Session, error) {
+func CreateSession(vals ...string) (*Session, error) {
 	s := Session{}
-	s.Key = k
-	if t != nil {
-		v, err := FromTableToString(t)
-		if err != nil {
-			log.Fatal(err)
-		}
-		s.Value = v 
+	s.Key = vals[0]
+	if len(vals) < 2 {
+		s.Value = ""
+	} else {
+		s.Value = vals[1]
 	}
 	addrs := make([]string, 2, 2)
 	addrs[0] = fmt.Sprintf("%v:%v", Rip, Rport0)
@@ -71,18 +69,14 @@ func (this *Session) GetFromCassandra() error {
 	return nil
 }
 
-func (this *Session) Get() (*Table, error) {
+func (this *Session) Get() (string, error) {
+	defer this.Client.Close()
 	v, err := this.Client.Get(this.Key).Result()
 	this.Value = v
 	if err == nil {
 		// 2.1 if succ, ret
 		fmt.Printf("%v,%v\n", this.Key, this.Value)
-		t, err := FromStringToTable(this.Value)
-		if err != nil {
-			log.Println(err)
-			return nil, err
-		}
-		return t, err
+		return this.Value, err
 	}
 	if err.Error() != "redis: nil" {
 		// 2.2 if failed with other reasons, ret
@@ -101,12 +95,7 @@ func (this *Session) Get() (*Table, error) {
 		log.Println(err)
 		return nil, err
 	}
-	t, err := FromStringToTable(this.Value)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	return t, err
+	return this.Value, err
 }
 
 func (this *Session) Put() error {
